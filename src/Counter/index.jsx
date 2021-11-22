@@ -1,18 +1,36 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { API_URL, ENDPOINT_NAME, SAVE_TIME } from '../constants'
 import CounterText from '../CounterText'
-import Loader from '../Loader'
+import { useApi } from '../hooks'
+import { StateComponent } from './components'
+import { changeTypes, states } from './constants'
+import { getEndpoint } from '../utils'
 import styles from './index.module.css'
 
-const changeTypes = {
-  PLUS: 'plus',
-  MINUS: 'minus',
-  INPUT: 'input',
-}
+const Counter = ({ initialValue = 1 }) => {
+  const [value, setValue] = useState(initialValue !== null ? initialValue : 1)
+  const callApi = useRef(false)
+  const { call, loading, error, requestTypes, setError } = useApi()
 
-const Counter = () => {
-  const [value, setValue] = useState(1)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (callApi.current) {
+        call({
+          url: getEndpoint(import.meta.env[API_URL]),
+          method: requestTypes.PUT,
+          body: JSON.stringify({
+            [import.meta.env[ENDPOINT_NAME]]: value,
+          }),
+        })
+      }
+    }, import.meta.env[SAVE_TIME] ?? 500)
+
+    return () => clearTimeout(timer)
+  }, [value])
 
   const handleChange = (type, val) => {
+    callApi.current = true
+    setError()
     if (type === changeTypes.PLUS) {
       setValue(value + 1)
     } else if (type === changeTypes.MINUS) {
@@ -22,9 +40,12 @@ const Counter = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.loaderContainer}>
-        <Loader scale={2 / 3} />
-        <p className={styles.loadingText}>Saving counter value</p>
+      <div
+        className={`${styles.topContainer} ${
+          loading || error ? styles.visible : styles.invisible
+        }`}
+      >
+        <StateComponent state={error ? states.ERROR : states.LOADING} />
       </div>
       <div className={styles.counterContainer}>
         <button
