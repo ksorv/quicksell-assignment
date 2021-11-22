@@ -2,7 +2,7 @@ import Loader from '../Loader'
 import { states } from './constants'
 import styles from './index.module.css'
 
-export const StateComponent = ({ state }) => {
+export const StateComponent = ({ state, counterError }) => {
   if (state === states.LOADING) {
     return (
       <>
@@ -12,5 +12,5 @@ export const StateComponent = ({ state }) => {
     )
   }
 
-  return <p className={styles.errorText}>Unable to save.</p>
+  return <p className={styles.errorText}>{counterError ?? 'Unable to save.'}</p>
 }
