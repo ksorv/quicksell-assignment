@@ -20,5 +20,7 @@ module.exports = {
     'max-len': [1, { code: 80 }],
     semi: 'off',
     'comma-dangle': 'off',
+    'import/prefer-default-export': 'off',
+    'object-curly-newline': 'off',
   },
 }
