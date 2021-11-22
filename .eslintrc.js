@@ -17,7 +17,7 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'max-len': [1, { code: 80 }],
+    'max-len': [1, { code: 80, ignoreComments: true }],
     semi: 'off',
     'comma-dangle': 'off',
     'import/prefer-default-export': 'off',
