@@ -1,0 +1,27 @@
+.loader {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes spin{
+  100%{
+    transform:rotatez(360deg);
+  }
+}
+
+.loader::before {
+  content: "";
+  color: white;
+  height: 19.2px;
+  width: 19.2px;
+  background: transparent;
+  border-radius: 50%;
+  border-top: solid black 2.4px;
+  border-left: dashed black 2px;
+  border-bottom: dotted black 2.4px;
+  border-right: 2px solid transparent;
+  animation: spin linear 1000ms infinite;
+}
