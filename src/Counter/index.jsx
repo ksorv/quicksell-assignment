@@ -7,15 +7,30 @@ import { changeTypes, states, SAVE_TIME, MAX_VALUE } from './constants'
 import { getEndpoint } from '../utils'
 import styles from './index.module.css'
 
-const Counter = ({ initialValue = 1 }) => {
+/**
+ *
+ * @param {number} initialValue this value will be used to control the counter, default to 1
+ * @param {number} maxValue this value is the max value to which counter can go, defaults to value from `VITE_MAX_VALUE` env var or `1000`
+ * @returns {jsx} A counter with multiple features
+ */
+const Counter = ({ initialValue = 1, maxValue = MAX_VALUE ?? 1000 }) => {
+  // this ref tells whether we should call the API or not to save data,
+  // which should not be the case on first render
   const callApi = useRef(false)
-  const maxValue = MAX_VALUE ?? 1000
+
+  // stores the error that are to be contained in Counter component only
+  // sand have nothing to do with API calls
   const [counterError, setCounterError] = useState()
   const { call, loading, error, requestTypes, setError } = useApi()
+
+  // init value to initialValue if not null(returned by BE if not set) else 1
   const [value, setValue] = useState(initialValue !== null ? initialValue : 1)
 
   useEffect(() => {
+    // create a timer, so API calls are minimized,
+    // as user can edit the counter any number of times
     const timer = setTimeout(() => {
+      // only call API if callApi ref tells us to
       if (callApi.current) {
         call({
           url: getEndpoint(API_URL),
@@ -27,15 +42,25 @@ const Counter = ({ initialValue = 1 }) => {
       }
     }, SAVE_TIME ?? 500)
 
+    // clear the timeout on every value change
     return () => clearTimeout(timer)
   }, [value])
 
+  /**
+   *
+   * @param {number} val The value which should be compared against `maxValue`
+   */
   const verifyAndSetValue = (val) => {
     if (val <= maxValue) {
       setValue(val)
     } else setCounterError(`Value can't exceed ${maxValue}`)
   }
 
+  /**
+   *
+   * @param {string} type one of the types from `changeTypes` type
+   * @param {string} val this value comes from the input's `e.target.value`
+   */
   const handleChange = (type, val) => {
     callApi.current = true
     setError()

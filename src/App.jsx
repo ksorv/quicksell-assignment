@@ -9,6 +9,7 @@ export default function App() {
   const { loading, error, data, call } = useApi()
 
   useEffect(() => {
+    // get the default value from api so that counter can be init
     call({
       url: getEndpoint(API_URL, ENDPOINT_NAME),
     })
