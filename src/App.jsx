@@ -10,10 +10,7 @@ export default function App() {
 
   useEffect(() => {
     call({
-      url: getEndpoint(
-        import.meta.env[API_URL],
-        import.meta.env[ENDPOINT_NAME]
-      ),
+      url: getEndpoint(API_URL, ENDPOINT_NAME),
     })
   }, [])
 

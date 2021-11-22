@@ -16,14 +16,14 @@ const Counter = ({ initialValue = 1 }) => {
     const timer = setTimeout(() => {
       if (callApi.current) {
         call({
-          url: getEndpoint(import.meta.env[API_URL]),
+          url: getEndpoint(API_URL),
           method: requestTypes.PUT,
           body: JSON.stringify({
-            [import.meta.env[ENDPOINT_NAME]]: value,
+            [ENDPOINT_NAME]: value,
           }),
         })
       }
-    }, import.meta.env[SAVE_TIME] ?? 500)
+    }, SAVE_TIME ?? 500)
 
     return () => clearTimeout(timer)
   }, [value])
